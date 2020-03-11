@@ -1,3 +1,4 @@
+config/secrets/dev/dev.decrypt.private.php
 .idea/
 
 ###> symfony/framework-bundle ###
