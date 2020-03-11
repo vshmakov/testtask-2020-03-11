@@ -29,7 +29,7 @@ final class ImportRetailCRMOrdersCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $this->retailCrmClient->request('/orders');
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('Orders imported');
 
         return 0;
     }

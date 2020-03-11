@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 final class RetailCrmClient
 {
     /** @var string */
@@ -12,14 +15,28 @@ final class RetailCrmClient
     /** @var string */
     private $retailCRMCompanyName;
 
-    public function __construct(string $retailCRMApiKey, string $retailCRMCompanyName)
+    /** @var HttpClientInterface */
+    private $client;
+
+    public function __construct(string $retailCRMApiKey, string $retailCRMCompanyName, HttpClientInterface $client)
     {
         $this->retailCRMApiKey = $retailCRMApiKey;
         $this->retailCRMCompanyName = $retailCRMCompanyName;
+        $this->client = $client;
     }
 
-    public function request(string $url)
+    public function request(string $path): array
     {
-        dd($this->retailCRMApiKey, $this->retailCRMCompanyName);
+        $response = $this->client->request(
+            Request::METHOD_GET,
+            sprintf('https://%s.retailcrm.ru/api/v5%s', $this->retailCRMCompanyName, $path),
+            [
+                'query' => [
+                    'apiKey' => $this->retailCRMApiKey,
+                ],
+            ]
+        );
+
+        return $response->toArray();
     }
 }
