@@ -111,6 +111,9 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "moneyphp/money": {
+        "version": "v3.3.0"
+    },
     "monolog/monolog": {
         "version": "2.0.2"
     },
