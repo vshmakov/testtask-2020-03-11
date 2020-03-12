@@ -13,9 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-final class ImportRetailCRMOrdersCommand extends Command
+final class MakeDiscountCommand extends Command
 {
-    protected static $defaultName = 'app:order:import';
+    protected static $defaultName = 'app:order:discount';
 
     /** @var RetailCrmClient */
     private $retailCrmClient;
@@ -39,37 +39,28 @@ final class ImportRetailCRMOrdersCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($this->getOrdersData() as $data) {
-            if (!$data['email']) {
-                $data['email'] = null;
-            }
+        /** @var Order[] $orders */
+        $orders = $this->entityManager
+            ->getRepository(Order::class)
+            ->findAll();
 
-            $order = $this->denormalizer->denormalize($data, Order::class);
-            $this->entityManager->persist($order);
+        foreach ($orders as $order) {
+            if ($this->isDiscountable($order)) {
+                $order->setTotalSumm(
+                    $order->getTotalSumm()
+                        ->multiply(0.9)
+                );
+            }
         }
 
         $this->entityManager->flush();
-        $io->success('Orders imported');
+        $io->success('Made  the discount');
 
         return 0;
     }
 
-    private function getOrdersData(): array
+    private function isDiscountable(Order $order): bool
     {
-        $orders = [];
-        $page = 1;
-
-        do {
-            $data = $this->retailCrmClient
-                ->request('/orders', [
-                    'page' => $page,
-                    'limit' => 100,
-                ])
-                ->toArray();
-            $orders = array_merge($orders, $data['orders']);
-            ++$page;
-        } while ($page <= $data['pagination']['totalPageCount']);
-
-        return $orders;
+        return null !== $order->getEmail() && preg_match('#@gmail.com$#', $order->getEmail());
     }
 }
