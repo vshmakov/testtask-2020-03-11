@@ -50,6 +50,7 @@ final class MakeDiscountCommand extends Command
                     $order->getTotalSumm()
                         ->multiply(0.9)
                 );
+                $order->setComment('Сделали скидку в 10%');
             }
         }
 
