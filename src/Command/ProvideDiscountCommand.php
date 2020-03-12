@@ -11,10 +11,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-final class MakeDiscountCommand extends Command
+final class ProvideDiscountCommand extends Command
 {
+    private const  DISCOUNT_PERCENT = 10;
+
     protected static $defaultName = 'app:order:discount';
 
     /** @var RetailCrmClient */
@@ -48,14 +51,25 @@ final class MakeDiscountCommand extends Command
             if ($this->isDiscountable($order)) {
                 $order->setTotalSumm(
                     $order->getTotalSumm()
-                        ->multiply(0.9)
+                        ->multiply(1 - self::DISCOUNT_PERCENT / 100)
                 );
                 $order->setComment('Сделали скидку в 10%');
+                $response = $this->retailCrmClient->request(
+                    Request::METHOD_POST,
+                    sprintf('/orders/%s/edit', $order->getId()),
+                    [
+                        'by' => 'id',
+                        'site' => $order->getSite(),
+                        'order' => json_encode([
+                            'discountManualPercent' => self::DISCOUNT_PERCENT,
+                        ]),
+                    ]
+                );
             }
         }
 
         $this->entityManager->flush();
-        $io->success('Made  the discount');
+        $io->success('Provided a discount');
 
         return 0;
     }

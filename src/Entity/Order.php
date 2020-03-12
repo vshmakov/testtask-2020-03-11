@@ -62,6 +62,12 @@ class Order
      */
     private $comment;
 
+    /**
+     * @var string|null
+     * @ORM\Column(nullable=true)
+     */
+    private $site;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -140,5 +146,15 @@ class Order
     public function setComment(?string $comment): void
     {
         $this->comment = $comment;
+    }
+
+    public function getSite(): ?string
+    {
+        return $this->site;
+    }
+
+    public function setSite(?string $site): void
+    {
+        $this->site = $site;
     }
 }
