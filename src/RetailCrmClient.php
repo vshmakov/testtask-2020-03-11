@@ -6,6 +6,7 @@ namespace App;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class RetailCrmClient
 {
@@ -25,18 +26,16 @@ final class RetailCrmClient
         $this->client = $client;
     }
 
-    public function request(string $path): array
+    public function request(string $path, array $parameters): ResponseInterface
     {
-        $response = $this->client->request(
+        return $this->client->request(
             Request::METHOD_GET,
             sprintf('https://%s.retailcrm.ru/api/v5%s', $this->retailCRMCompanyName, $path),
             [
-                'query' => [
-                    'apiKey' => $this->retailCRMApiKey,
-                ],
+                'query' => $parameters + [
+                        'apiKey' => $this->retailCRMApiKey,
+                    ],
             ]
         );
-
-        return $response->toArray();
     }
 }
