@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Entity\Order;
 use App\RetailCrmClient;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,12 +24,16 @@ final class ImportRetailCRMOrdersCommand extends Command
     /** @var DenormalizerInterface */
     private $denormalizer;
 
-    public function __construct(string $name = null, RetailCrmClient $retailCrmClient, DenormalizerInterface $denormalizer)
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    public function __construct(string $name = null, RetailCrmClient $retailCrmClient, DenormalizerInterface $denormalizer, EntityManagerInterface $entityManager)
     {
         parent::__construct($name);
 
         $this->retailCrmClient = $retailCrmClient;
         $this->denormalizer = $denormalizer;
+        $this->entityManager = $entityManager;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -44,9 +49,10 @@ final class ImportRetailCRMOrdersCommand extends Command
             $this->denormalizer->denormalize($data, Order::class, null, [
                 AbstractNormalizer::OBJECT_TO_POPULATE => $order,
             ]);
-            dd($order);
+            $this->entityManager->persist($order);
         }
 
+        $this->entityManager->flush();
         $io->success('Orders imported');
 
         return 0;

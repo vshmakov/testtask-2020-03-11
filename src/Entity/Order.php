@@ -4,101 +4,113 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Money\Money;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="orders")
+ */
 class Order
 {
     /**
-     * @var int
+     * @var int|null
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      */
     public $id;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|null
+     * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
 
     /**
-     * @var string
+     * @var string|null
+     * @ORM\Column
      */
     private $status;
 
     /**
-     * @var Money
+     * @var Money|null
      */
     private $totalSumm;
 
     /**
-     * @var string
+     * @var string|null
+     * @ORM\Column
      */
     private $firstName;
 
     /**
-     * @var string
+     * @var string|null
+     * @ORM\Column(nullable=true)
      */
     private $lastName;
 
     /**
      * @var string|null
+     * @ORM\Column(nullable=true)
      */
     private $email;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): void
+    public function setStatus(?string $status): void
     {
         $this->status = $status;
     }
 
-    public function getTotalSumm(): Money
+    public function getTotalSumm(): ?Money
     {
         return $this->totalSumm;
     }
 
-    public function setTotalSumm(Money $totalSumm): void
+    public function setTotalSumm(?Money $totalSumm): void
     {
         $this->totalSumm = $totalSumm;
     }
 
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): void
+    public function setFirstName(?string $firstName): void
     {
         $this->firstName = $firstName;
     }
 
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): void
+    public function setLastName(?string $lastName): void
     {
         $this->lastName = $lastName;
     }
