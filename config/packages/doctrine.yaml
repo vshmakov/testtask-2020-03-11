@@ -1,5 +1,7 @@
 doctrine:
     dbal:
+        types:
+            rub: App\Doctrine\Type\RubType
         url: '%env(resolve:DATABASE_URL)%'
 
         # IMPORTANT: You MUST configure your server version,

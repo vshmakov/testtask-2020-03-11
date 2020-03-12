@@ -34,6 +34,7 @@ class Order
 
     /**
      * @var Money|null
+     * @ORM\Column(type="rub")
      */
     private $totalSumm;
 
