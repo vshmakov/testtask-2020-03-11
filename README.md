@@ -12,3 +12,10 @@ Test task
 Написать команду, которая бы забирала заказы из RetailCRM и сохраняла в БД.
 
 Если в заказе у клиента почта совпадает с определенным паттерном, то нужно добавить заказу скидку в 10%, заполнить комментарий и после сохранения в БД обновить данные этого заказа в RetailCRM.
+
+Usage
+===============
+
+- docker-compose up -d
+- docker-compose exec php php bin/console app:order:import
+- docker-compose exec php php bin/console app:order:discount
