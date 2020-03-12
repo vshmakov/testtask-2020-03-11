@@ -56,6 +56,18 @@ class Order
      */
     private $email;
 
+    /**
+     * @var string|null
+     * @ORM\Column(nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @var string|null
+     * @ORM\Column(nullable=true)
+     */
+    private $site;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -124,5 +136,25 @@ class Order
     public function setEmail(?string $email): void
     {
         $this->email = $email;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): void
+    {
+        $this->comment = $comment;
+    }
+
+    public function getSite(): ?string
+    {
+        return $this->site;
+    }
+
+    public function setSite(?string $site): void
+    {
+        $this->site = $site;
     }
 }

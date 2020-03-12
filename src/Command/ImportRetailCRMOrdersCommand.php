@@ -11,7 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class ImportRetailCRMOrdersCommand extends Command
@@ -45,10 +45,7 @@ final class ImportRetailCRMOrdersCommand extends Command
                 $data['email'] = null;
             }
 
-            $order = new Order();
-            $this->denormalizer->denormalize($data, Order::class, null, [
-                AbstractNormalizer::OBJECT_TO_POPULATE => $order,
-            ]);
+            $order = $this->denormalizer->denormalize($data, Order::class);
             $this->entityManager->persist($order);
         }
 
@@ -65,7 +62,7 @@ final class ImportRetailCRMOrdersCommand extends Command
 
         do {
             $data = $this->retailCrmClient
-                ->request('/orders', [
+                ->request(Request::METHOD_GET, '/orders', [
                     'page' => $page,
                     'limit' => 100,
                 ])

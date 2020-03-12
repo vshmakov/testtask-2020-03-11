@@ -26,15 +26,19 @@ final class RetailCrmClient
         $this->client = $client;
     }
 
-    public function request(string $path, array $parameters): ResponseInterface
+    public function request(string $method, string $path, array $parameters): ResponseInterface
     {
+        $query = Request::METHOD_GET === $method ? $parameters : [];
+        $body = Request::METHOD_POST === $method ? $parameters : [];
+
         return $this->client->request(
-            Request::METHOD_GET,
+            $method,
             sprintf('https://%s.retailcrm.ru/api/v5%s', $this->retailCRMCompanyName, $path),
             [
-                'query' => $parameters + [
+                'query' => $query + [
                         'apiKey' => $this->retailCRMApiKey,
                     ],
+                'body' => $body,
             ]
         );
     }
