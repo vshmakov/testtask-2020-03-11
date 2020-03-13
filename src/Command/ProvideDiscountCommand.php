@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class ProvideDiscountCommand extends Command
 {
@@ -23,18 +22,14 @@ final class ProvideDiscountCommand extends Command
     /** @var RetailCrmClient */
     private $retailCrmClient;
 
-    /** @var DenormalizerInterface */
-    private $denormalizer;
-
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(string $name = null, RetailCrmClient $retailCrmClient, DenormalizerInterface $denormalizer, EntityManagerInterface $entityManager)
+    public function __construct(string $name = null, RetailCrmClient $retailCrmClient, EntityManagerInterface $entityManager)
     {
         parent::__construct($name);
 
         $this->retailCrmClient = $retailCrmClient;
-        $this->denormalizer = $denormalizer;
         $this->entityManager = $entityManager;
     }
 
