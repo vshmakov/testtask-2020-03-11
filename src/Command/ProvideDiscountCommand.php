@@ -48,8 +48,8 @@ final class ProvideDiscountCommand extends Command
                     $order->getTotalSumm()
                         ->multiply(1 - self::DISCOUNT_PERCENT / 100)
                 );
-                $order->setComment('Сделали скидку в 10%');
-                $response = $this->retailCrmClient->request(
+                $order->setComment(sprintf('Сделали скидку в %s', self::DISCOUNT_PERCENT.'%'));
+                $this->retailCrmClient->request(
                     Request::METHOD_POST,
                     sprintf('/orders/%s/edit', $order->getId()),
                     [
@@ -60,10 +60,10 @@ final class ProvideDiscountCommand extends Command
                         ]),
                     ]
                 );
+                $this->entityManager->flush();
             }
         }
 
-        $this->entityManager->flush();
         $io->success('Provided a discount');
 
         return 0;

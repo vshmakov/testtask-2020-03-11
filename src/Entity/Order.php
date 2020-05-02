@@ -18,7 +18,7 @@ class Order
      * @ORM\Id
      * @ORM\Column(type="integer")
      */
-    public $id;
+    private $id;
 
     /**
      * @var \DateTimeImmutable|null

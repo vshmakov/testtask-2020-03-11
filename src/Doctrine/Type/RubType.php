@@ -15,7 +15,7 @@ final class RubType extends IntegerType
         return 'rub';
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
     {
         $amount = parent::convertToPHPValue($value, $platform);
 
@@ -27,10 +27,19 @@ final class RubType extends IntegerType
     }
 
     /**
-     * @param Money $value
+     * @param Money|null $value
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?int
     {
+        if (null === $value) {
+            return  null;
+        }
+
         return (int) $value->getAmount();
+    }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
+    {
+        return true;
     }
 }
